@@ -15,7 +15,10 @@ return new class extends Migration
             $table->decimal('total_llamadas', 10, 2);
             $table->decimal('total_servicios', 10, 2);
             $table->decimal('total', 10, 2);
-            $table->foreignId('cliente_id')->constrained('clientes');
+            $table->foreignId('cliente_id')
+                ->nullable() // Permitir valores NULL
+                ->constrained('clientes')
+                ->onDelete('set null'); // Agregar ON DELETE SET NULL
             $table->timestamps();
 
             $table->index(['cliente_id', 'mes', 'año']);
@@ -23,7 +26,9 @@ return new class extends Migration
     }
 
     public function down()
-    {
-        Schema::dropIfExists('pagos_mensuales');
-    }
-};
+    {      Schema::dropIfExists('pagos_mensuales');
+        Schema::dropIfExists('pagos_mensuales');    }
+
+
+
+};    }};

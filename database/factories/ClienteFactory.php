@@ -17,7 +17,7 @@ class ClienteFactory extends Factory
             'carnet' => $this->faker->unique()->regexify('[A-Z0-9]{8}'), // Número de carné cubano
             'direccion' => $this->faker->streetAddress . ', ' . $this->faker->city,
             'telefono' => $this->faker->unique()->numerify('5#######'), // Números cubanos
-            'tipo' => $tipo,
+            'tipo' => $tipo, // Asegurarse de que sea 'RESIDENCIAL' o 'ESTATAL'
             'activo' => $this->faker->boolean(85), // 85% probabilidad de estar activo
             'moroso' => $this->faker->boolean(15), // 15% probabilidad de morosidad
             'matutino' => $tipo === 'RESIDENCIAL' ? $this->faker->boolean(20) : false,

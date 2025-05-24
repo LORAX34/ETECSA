@@ -29,6 +29,6 @@ class Cliente extends Model
 
     public function pagosMensuales()
     {
-        return $this->hasMany(PagoMensual::class);
+        return $this->hasMany(PagoMensual::class, 'cliente_id');
     }
 }
