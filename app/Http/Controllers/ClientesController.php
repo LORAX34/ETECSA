@@ -107,9 +107,14 @@ class ClientesController extends Controller
         // Obtener todos los clientes con el conteo de sus llamadas
         $clientes = Cliente::withCount('llamadas')->get();
 
+        if ($clientes->isEmpty()) {
+            return Inertia::render('Clientes/ClienteMasServicios', [
+                'error' => 'No hay clientes registrados en el sistema.',
+            ]);
+        }
+
         // Calcular un puntaje de uso de servicios para cada cliente
         $clientesConPuntaje = $clientes->map(function ($cliente) {
-            // Calcular un puntaje basado en servicios y llamadas
             $puntajeServicios = 0;
 
             // Considerar servicios adicionales
@@ -122,24 +127,26 @@ class ClientesController extends Controller
 
             return [
                 'cliente' => $cliente,
-                'puntaje_servicios' => $puntajeServicios
+                'puntaje_servicios' => $puntajeServicios,
             ];
         });
 
         // Ordenar por puntaje y obtener el cliente con mayor uso
         $clienteTop = $clientesConPuntaje->sortByDesc('puntaje_servicios')->first();
 
-        return response()->json([
-            'cliente' => $clienteTop['cliente'],
-            'detalles_uso' => [
-                'llamadas_realizadas' => $clienteTop['cliente']->llamadas_count,
-                'servicios_activos' => [
-                    'matutino' => $clienteTop['cliente']->matutino,
-                    'rastreo' => $clienteTop['cliente']->rastreo,
-                    'linea_arrendada' => $clienteTop['cliente']->linea_arrendada
+        return Inertia::render('Clientes/ClienteMasServicios', [
+            'clienteTop' => [
+                'cliente' => $clienteTop['cliente'],
+                'detalles_uso' => [
+                    'llamadas_realizadas' => $clienteTop['cliente']->llamadas_count,
+                    'servicios_activos' => [
+                        'matutino' => $clienteTop['cliente']->matutino,
+                        'rastreo' => $clienteTop['cliente']->rastreo,
+                        'linea_arrendada' => $clienteTop['cliente']->linea_arrendada,
+                    ],
+                    'puntaje_total' => $clienteTop['puntaje_servicios'],
                 ],
-                'puntaje_total' => $clienteTop['puntaje_servicios']
-            ]
+            ],
         ]);
     }
 

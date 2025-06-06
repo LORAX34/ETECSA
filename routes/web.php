@@ -23,9 +23,9 @@ Route::get('/clientes/llamadas-rastreo', [ClientesController::class, 'llamadasRe
 Route::get('/clientes/buscar-llamadas', function () {
     return Inertia::render('Clientes/LlamadasRastreo');
 })->middleware(['auth', 'verified'])->name('clientes.buscarLlamadas');
-Route::get('/clientes/mas-servicios', function () {
-    return Inertia::render('Clientes/ClienteMasServicios');
-})->middleware(['auth', 'verified'])->name('clientes.masServicios');
+Route::get('/clientes/mas-servicios', [ClientesController::class, 'clienteMasServicios'])
+    ->middleware(['auth', 'verified'])
+    ->name('clientes.masServicios');
 Route::get('/clientes/tele-seleccion', [ClientesController::class, 'clientesTeleSeleccion'])->middleware(['auth', 'verified'])->name('clientes.teleSeleccion');
 Route::get('/clientes/pagos-mensuales', [ClientesController::class, 'pagosMensuales'])->middleware(['auth', 'verified'])->name('clientes.pagosMensuales');
 Route::get('/clientes/llamadas-recibidas', [ClientesController::class, 'llamadasRecibidas'])->middleware(['auth', 'verified'])->name('clientes.llamadasRecibidas');
