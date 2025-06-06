@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Cliente;
+use App\Models\Llamada;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,5 +28,16 @@ class DatabaseSeeder extends Seeder
             LlamadaSeeder::class,
             PagoMensualSeeder::class,
         ]);
+
+        // Crear clientes de prueba
+        Cliente::factory()->count(5)->create()->each(function ($cliente) {
+            // Crear llamadas asociadas a cada cliente
+            Llamada::factory()->count(3)->create([
+                'numero_origen' => $cliente->telefono,
+                'numero_destino' => '555-1234',
+                'precio' => rand(1, 10),
+                'es_tele_seleccion' => rand(0, 1) === 1, // Poblar la columna con valores aleatorios
+            ]);
+        });
     }
 }

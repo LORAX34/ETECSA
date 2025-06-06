@@ -5,7 +5,7 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 defineProps({
-    clientes: Array, // Recibir los datos de clientes desde la ruta
+    clientes: Array,
 });
 
 const showModal = ref(false);
@@ -19,9 +19,6 @@ const form = useForm({
     telefono: '',
     tipo: 'RESIDENCIAL',
     activo: true,
-    matutino: false,
-    rastreo: false,
-    linea_arrendada: false,
 });
 
 const openCreateModal = () => {
@@ -40,9 +37,6 @@ const openEditModal = (cliente) => {
         telefono: cliente.telefono,
         tipo: cliente.tipo,
         activo: cliente.activo,
-        matutino: cliente.matutino || false,
-        rastreo: cliente.rastreo || false,
-        linea_arrendada: cliente.linea_arrendada || false,
     });
     showModal.value = true;
 };
@@ -56,14 +50,22 @@ const handleSubmit = () => {
         form.put(`/clientes/${selectedCliente.value.id}`, {
             onSuccess: () => {
                 closeModal();
-                location.reload();
+                location.reload(); // Recargar la página para reflejar los cambios
+            },
+            onError: (errors) => {
+                console.error('Errores al actualizar cliente:', errors);
+                alert('Ocurrió un error al actualizar el cliente.');
             },
         });
     } else {
         form.post('/clientes', {
             onSuccess: () => {
                 closeModal();
-                location.reload();
+                location.reload(); // Recargar la página para reflejar los cambios
+            },
+            onError: (errors) => {
+                console.error('Errores al agregar cliente:', errors);
+                alert('Ocurrió un error al agregar el cliente.');
             },
         });
     }
@@ -118,30 +120,11 @@ const handleDelete = (cliente) => {
                             <option value="ESTATAL">Estatal</option>
                         </select>
                     </div>
-                    <div class="space-y-3">
+                    <div>
                         <label class="flex items-center space-x-2">
                             <input type="checkbox" v-model="form.activo" />
-                            <span>Cliente Activo</span>
+                            <span>Activo</span>
                         </label>
-                        
-                        <!-- Servicios Adicionales -->
-                        <div class="border-t pt-3">
-                            <h4 class="text-sm font-medium text-gray-700 mb-2">Servicios Adicionales</h4>
-                            <div class="space-y-2">
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" v-model="form.matutino" />
-                                    <span class="text-sm">Servicio Matutino (+$1.00/mes)</span>
-                                </label>
-                                <label class="flex items-center space-x-2" v-if="form.tipo === 'RESIDENCIAL'">
-                                    <input type="checkbox" v-model="form.rastreo" />
-                                    <span class="text-sm">Servicio de Rastreo (+$1.00/mes)</span>
-                                </label>
-                                <label class="flex items-center space-x-2" v-if="form.tipo === 'ESTATAL'">
-                                    <input type="checkbox" v-model="form.linea_arrendada" />
-                                    <span class="text-sm">Línea Arrendada (+$1.00/mes)</span>
-                                </label>
-                            </div>
-                        </div>
                     </div>
                     <div class="flex justify-end space-x-2">
                         <button type="button" @click="closeModal" class="rounded bg-gray-300 px-4 py-2 hover:bg-gray-400">Cancelar</button>

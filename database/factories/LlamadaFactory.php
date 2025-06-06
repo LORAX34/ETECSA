@@ -8,6 +8,8 @@ use App\Models\Cliente;
 
 class LlamadaFactory extends Factory
 {
+    protected $model = \App\Models\Llamada::class;
+
     public function definition()
     {
         return [
@@ -25,6 +27,7 @@ class LlamadaFactory extends Factory
             'tarifa_pais' => $this->faker->randomFloat(2, 0.10, 5.00),
             'precio' => $this->faker->randomFloat(2, 1.00, 100.00),
             'cliente_id' => Cliente::factory(),
+            'es_tele_seleccion' => $this->faker->boolean,
         ];
     }
 }

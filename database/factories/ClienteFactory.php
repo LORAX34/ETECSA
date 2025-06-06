@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ClienteFactory extends Factory
 {
+    protected $model = \App\Models\Cliente::class;
+
     public function definition()
     {
         $tipo = $this->faker->randomElement(['RESIDENCIAL', 'ESTATAL']);

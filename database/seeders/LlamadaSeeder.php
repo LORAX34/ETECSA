@@ -26,7 +26,13 @@ class LlamadaSeeder extends Seeder
                         $destino = $clientes->where('id', '!=', $cliente->id)->random();
                         return $destino->telefono;
                     },
+                    'es_tele_seleccion' => rand(0, 1) === 1, // Asegúrate de que esta columna esté incluida
                 ]);
         }
+
+        // Poblar la columna es_tele_seleccion con valores aleatorios
+        Llamada::factory()->count(10)->create([
+            'es_tele_seleccion' => rand(0, 1) === 1,
+        ]);
     }
 }

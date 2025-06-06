@@ -13,11 +13,11 @@ class ClientesController extends Controller
     public function index()
     {
         $clientes = Cliente::all();
-        return inertia('Clientes/Gestion', ['clientes' => $clientes]);
+        return Inertia::render('Clientes/Gestion', ['clientes' => $clientes]);
     }
 
     // 1. Incluir un cliente en la central
-    public function incluirCliente(Request $request)
+    public function store(Request $request) // Cambiar el nombre del método de incluirCliente a store
     {
         $validated = $request->validate([
             'nombre' => 'required|string|max:255',
@@ -26,17 +26,7 @@ class ClientesController extends Controller
             'telefono' => 'required|string|max:15|unique:clientes,telefono',
             'tipo' => 'required|string|in:RESIDENCIAL,ESTATAL', // Asegurarse de que los valores sean válidos
             'activo' => 'required|boolean',
-            'matutino' => 'boolean',
-            'rastreo' => 'boolean',
-            'linea_arrendada' => 'boolean',
         ]);
-
-        $validated['tipo'] = strtoupper($validated['tipo']); // Convertir a mayúsculas
-        
-        // Establecer valores por defecto para servicios
-        $validated['matutino'] = $validated['matutino'] ?? false;
-        $validated['rastreo'] = $validated['rastreo'] ?? false;
-        $validated['linea_arrendada'] = $validated['linea_arrendada'] ?? false;
 
         Cliente::create($validated);
 
@@ -156,14 +146,12 @@ class ClientesController extends Controller
     // 6. Listado de clientes que hicieron uso de la tele selección
     public function clientesTeleSeleccion()
     {
-        // Obtener clientes que tienen llamadas con teleselección
         $clientes = Cliente::whereHas('llamadas', function ($query) {
             $query->where('es_tele_seleccion', true);
         })->with(['llamadas' => function ($query) {
             $query->where('es_tele_seleccion', true);
         }])->get();
 
-        // Calcular el total cobrado por teleselección para cada cliente
         $resultado = $clientes->map(function ($cliente) {
             $total = $cliente->llamadas->sum('precio');
             return [
@@ -177,7 +165,6 @@ class ClientesController extends Controller
             ];
         });
 
-        // Ordenar por total cobrado (de mayor a menor)
         $resultadoOrdenado = $resultado->sortByDesc('total_cobrado')->values();
 
         return inertia('Clientes/TeleSeleccion', [
@@ -195,17 +182,7 @@ class ClientesController extends Controller
             'telefono' => 'required|string|max:15|unique:clientes,telefono,' . $id,
             'tipo' => 'required|string|in:RESIDENCIAL,ESTATAL', // Asegurarse de que los valores sean válidos
             'activo' => 'required|boolean',
-            'matutino' => 'boolean',
-            'rastreo' => 'boolean',
-            'linea_arrendada' => 'boolean',
         ]);
-
-        $validated['tipo'] = strtoupper($validated['tipo']); // Convertir a mayúsculas
-        
-        // Establecer valores por defecto para servicios
-        $validated['matutino'] = $validated['matutino'] ?? false;
-        $validated['rastreo'] = $validated['rastreo'] ?? false;
-        $validated['linea_arrendada'] = $validated['linea_arrendada'] ?? false;
 
         $cliente = Cliente::findOrFail($id);
         $cliente->update($validated);
@@ -217,11 +194,6 @@ class ClientesController extends Controller
     public function destroy($id)
     {
         $cliente = Cliente::findOrFail($id);
-
-        // Eliminar los pagos mensuales relacionados
-        $cliente->pagosMensuales()->delete();
-
-        // Eliminar el cliente
         $cliente->delete();
 
         return redirect()->route('clientes')->with('success', 'Cliente eliminado exitosamente.');

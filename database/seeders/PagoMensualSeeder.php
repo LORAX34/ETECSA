@@ -21,6 +21,7 @@ class PagoMensualSeeder extends Seeder
                     'cliente_id' => $cliente->id,
                     'mes' => now()->subMonths($i)->month,
                     'año' => now()->subMonths($i)->year,
+                    'total_llamadas' => rand(10, 100),
                     'total_servicios' => $tieneServicios,
                     'total' => function ($attributes) {
                         return $attributes['total_llamadas'] + $attributes['total_servicios'];
