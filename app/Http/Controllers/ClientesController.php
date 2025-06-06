@@ -229,21 +229,18 @@ class ClientesController extends Controller
         $telefono = $request->query('telefono');
 
         if (!$telefono) {
-            return Inertia::render('Clientes/LlamadasRastreo', [
-                'error' => 'El número de teléfono es requerido.',
+            return response()->json([
+                'error' => 'Por favor, ingrese un número de teléfono.',
                 'cliente' => null,
                 'llamadas' => [],
             ]);
         }
 
-        $cliente = Cliente::where('telefono', $telefono)
-            ->where('tipo', 'RESIDENCIAL')
-            ->where('rastreo', true)
-            ->first();
+        $cliente = Cliente::where('telefono', $telefono)->first();
 
         if (!$cliente) {
-            return Inertia::render('Clientes/LlamadasRastreo', [
-                'error' => 'No se encontró un cliente residencial con rastreo habilitado.',
+            return response()->json([
+                'error' => 'No se encontró un cliente con el número proporcionado.',
                 'cliente' => null,
                 'llamadas' => [],
             ]);
@@ -260,7 +257,7 @@ class ClientesController extends Controller
             )
             ->get();
 
-        return Inertia::render('Clientes/LlamadasRastreo', [
+        return response()->json([
             'error' => null,
             'cliente' => $cliente,
             'llamadas' => $llamadas,
