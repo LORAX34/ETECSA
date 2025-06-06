@@ -1,43 +1,78 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { ref } from 'vue';
+import { ArcElement, BarController, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, PieController, Title, Tooltip } from 'chart.js';
+import { BarChart, PieChart } from 'vue-chart-3';
 
-const stats = ref({
-    totalClientes: 120,
-    clientesActivos: 100,
-    clientesMorosos: 20,
-    llamadasHoy: 45,
-    pagosPendientes: 15,
-});
+// Registrar los componentes y controladores de Chart.js
+ChartJS.register(Title, Tooltip, Legend, ArcElement, PieController, BarController, BarElement, CategoryScale, LinearScale);
+
+// Datos para gráficos
+const pieChartData = {
+    labels: ['Activos', 'Morosos', 'Inactivos'],
+    datasets: [
+        {
+            label: 'Clientes',
+            data: [100, 20, 10], // Datos de prueba
+            backgroundColor: ['#4CAF50', '#FF5722', '#9E9E9E'],
+        },
+    ],
+};
+
+const pieChartOptions = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Estado de Clientes',
+        },
+    },
+};
+
+const barChartData = {
+    labels: ['Llamadas Realizadas', 'Servicios Contratados', 'Pagos Pendientes'],
+    datasets: [
+        {
+            label: 'Estadísticas Generales',
+            data: [300, 150, 45], // Datos de prueba
+            backgroundColor: ['#FFC107', '#673AB7', '#FF5722'],
+        },
+    ],
+};
+
+const barChartOptions = {
+    responsive: true,
+    plugins: {
+        legend: {
+            position: 'top',
+        },
+        title: {
+            display: true,
+            text: 'Estadísticas Generales',
+        },
+    },
+};
 </script>
 
 <template>
     <AppLayout>
-        <div class="text-center">
-            <h1 class="text-3xl font-bold text-[#005BAC]">Bienvenido a la Central Telefónica</h1>
-            <p class="mt-4 text-lg text-gray-600">Administra tus clientes, llamadas y pagos de manera eficiente desde este sistema.</p>
-        </div>
+        <div class="flex min-h-screen flex-col items-center bg-[#f8fafc] py-10">
+            <div class="w-full max-w-6xl px-6">
+                <h1 class="mb-6 text-center text-3xl font-bold text-[#004080]">Dashboard</h1>
 
-        <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <div class="rounded-lg bg-blue-500 p-6 text-white shadow-lg">
-                <h2 class="text-xl font-bold">Total de Clientes</h2>
-                <p class="mt-2 text-2xl">{{ stats.totalClientes }}</p>
-            </div>
-            <div class="rounded-lg bg-green-500 p-6 text-white shadow-lg">
-                <h2 class="text-xl font-bold">Clientes Activos</h2>
-                <p class="mt-2 text-2xl">{{ stats.clientesActivos }}</p>
-            </div>
-            <div class="rounded-lg bg-red-500 p-6 text-white shadow-lg">
-                <h2 class="text-xl font-bold">Clientes Morosos</h2>
-                <p class="mt-2 text-2xl">{{ stats.clientesMorosos }}</p>
-            </div>
-            <div class="rounded-lg bg-yellow-500 p-6 text-white shadow-lg">
-                <h2 class="text-xl font-bold">Llamadas Hoy</h2>
-                <p class="mt-2 text-2xl">{{ stats.llamadasHoy }}</p>
-            </div>
-            <div class="rounded-lg bg-purple-500 p-6 text-white shadow-lg">
-                <h2 class="text-xl font-bold">Pagos Pendientes</h2>
-                <p class="mt-2 text-2xl">{{ stats.pagosPendientes }}</p>
+                <!-- Gráfico de Estado de Clientes -->
+                <div class="mb-8 rounded-lg bg-white p-6 shadow-lg">
+                    <h2 class="mb-4 text-xl font-bold text-[#004080]">Estado de Clientes</h2>
+                    <PieChart :chart-data="pieChartData" :chart-options="pieChartOptions" />
+                </div>
+
+                <!-- Gráfico de Estadísticas Generales -->
+                <div class="mb-8 rounded-lg bg-white p-6 shadow-lg">
+                    <h2 class="mb-4 text-xl font-bold text-[#004080]">Estadísticas Generales</h2>
+                    <BarChart :chart-data="barChartData" :chart-options="barChartOptions" />
+                </div>
             </div>
         </div>
     </AppLayout>
