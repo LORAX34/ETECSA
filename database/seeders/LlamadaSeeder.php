@@ -13,24 +13,20 @@ class LlamadaSeeder extends Seeder
     public function run()
     {
         $clientes = Cliente::where('activo', true)->get();
-        $paises = Pais::all();
 
         foreach ($clientes as $cliente) {
-            // Crear entre 5 y 30 llamadas por cliente
-            $llamadas = Llamada::factory()
-                ->count(rand(5, 30))
+            // Crear entre 10 y 50 llamadas por cliente
+            Llamada::factory()
+                ->count(rand(10, 50))
                 ->create([
                     'cliente_id' => $cliente->id,
-                    'cod_local_origen' => rand(1, 99), // Código localidad aleatorio
+                    'numero_origen' => $cliente->telefono, // Usar el teléfono del cliente como origen
+                    'numero_destino' => function () use ($clientes, $cliente) {
+                        // Seleccionar un número de destino aleatorio de otro cliente
+                        $destino = $clientes->where('id', '!=', $cliente->id)->random();
+                        return $destino->telefono;
+                    },
                 ]);
-
-            // Para algunas llamadas de servicio, crear registro de servicio matutino
-            foreach ($llamadas->where('es_servicio', true) as $llamadaServicio) {
-                ServicioMatutino::factory()->create([
-                    'llamada_id' => $llamadaServicio->id,
-                    'hora_programada' => $llamadaServicio->fecha_hora->format('H:i'),
-                ]);
-            }
         }
     }
 }

@@ -24,7 +24,7 @@ class Cliente extends Model
 
     public function llamadas()
     {
-        return $this->hasMany(Llamada::class);
+        return $this->hasMany(Llamada::class, 'numero_origen', 'telefono');
     }
 
     public function pagosMensuales()

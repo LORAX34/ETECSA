@@ -18,6 +18,7 @@ class Llamada extends Model
         'es_nacional',
         'es_local',
         'es_servicio',
+        'es_tele_seleccion',
         'cod_local_origen',
         'cod_local_dest',
         'cod_pais_dest',

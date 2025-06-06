@@ -28,7 +28,7 @@ import { Link } from '@inertiajs/vue3';
 
                 <!-- Acciones -->
                 <div class="flex flex-col items-center justify-center">
-                    <img src="/images/etecsa-logo.jpg" alt="Logotipo de ETECSA" class="mb-6 h-32 w-32" />
+                    <img src="/WhatsNew.png" alt="Logotipo de ETECSA" class="mb-6 h-32 w-32" />
                     <div class="space-y-4">
                         <Link href="/login" class="block w-full rounded bg-blue-500 px-4 py-2 text-center font-semibold text-white hover:bg-blue-600">
                             Iniciar Sesión

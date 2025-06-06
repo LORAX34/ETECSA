@@ -11,13 +11,13 @@ class ClienteSeeder extends Seeder
     {
         // Crear clientes estatales (empresas)
         Cliente::factory()
-            ->count(15)
+            ->count(20)
             ->state(['tipo' => 'ESTATAL']) // Asegurarse de que sea 'ESTATAL'
             ->create();
 
         // Crear clientes residenciales
         Cliente::factory()
-            ->count(85)
+            ->count(80)
             ->state(['tipo' => 'RESIDENCIAL']) // Asegurarse de que sea 'RESIDENCIAL'
             ->create();
     }

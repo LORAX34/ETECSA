@@ -3,20 +3,30 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
-import { FileText, PhoneCall, TrendingUp, Users } from 'lucide-vue-next';
+import { Link, useForm } from '@inertiajs/vue3';
+import { Award, FileText, LogOut, PhoneCall, Search, Users } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: Users,
+    },
     {
         title: 'Gestión de Clientes',
         href: '/clientes',
         icon: Users,
     },
     {
-        title: 'Cliente con Más Servicios',
-        href: '/clientes/mas-servicios',
-        icon: TrendingUp,
+        title: 'Buscar Llamadas',
+        href: '/clientes/buscar-llamadas',
+        icon: Search,
+    },
+    {
+        title: 'Pagos Mensuales',
+        href: '/clientes/pagos-mensuales',
+        icon: FileText,
     },
     {
         title: 'Clientes con Tele Selección',
@@ -24,11 +34,20 @@ const mainNavItems: NavItem[] = [
         icon: PhoneCall,
     },
     {
-        title: 'Llamadas con Rastreo',
-        href: '/clientes/{id}/llamadas-rastreo',
-        icon: FileText,
+        title: 'Cliente Top Servicios',
+        href: '/clientes/mas-servicios',
+        icon: Award,
     },
 ];
+
+const logoutForm = useForm({});
+const handleLogout = () => {
+    logoutForm.post('/logout', {
+        onSuccess: () => {
+            window.location.href = '/';
+        },
+    });
+};
 </script>
 
 <template>
@@ -51,6 +70,10 @@ const mainNavItems: NavItem[] = [
 
         <SidebarFooter>
             <NavUser />
+            <button @click="handleLogout" class="mt-4 flex items-center space-x-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600">
+                <LogOut />
+                <span>Cerrar Sesión</span>
+            </button>
         </SidebarFooter>
     </Sidebar>
     <slot />
